@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Sleep Debt Calculator | Personalized Recovery Plan</title>
+  <meta name="description" content="Professional sleep debt calculator with personalized recovery plan: track weekly sleep, calculate deficit, get actionable recovery steps, sleep score, and bedtime optimization.">
+  
+  <!-- Google AdSense placeholder (meta tag for verification if needed) -->
+  <meta name="google-adsense-account" content="sites: example.com">
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+  
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: #f5f7fb;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif;
+      color: #1a2c3e;
+      line-height: 1.5;
+    }
+
+    .top-nav {
+      background: #ffffff;
+      border-bottom: 1px solid #e9edf2;
+      padding: 0.9rem 2rem;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(255, 255, 255, 0.96);
+      backdrop-filter: blur(2px);
+    }
+
+    .nav-container {
+      max-width: 1280px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .logo {
+      font-weight: 700;
+      font-size: 1.3rem;
+      letter-spacing: -0.3px;
+      background: linear-gradient(135deg, #1a4d6b, #2c6e8f);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 1.8rem;
+      align-items: center;
+    }
+
+    .nav-btn {
+      background: none;
+      border: none;
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: #4a627a;
+      cursor: pointer;
+      padding: 0.4rem 0;
+      transition: color 0.2s;
+      font-family: inherit;
+      border-bottom: 2px solid transparent;
+    }
+
+    .nav-btn:hover {
+      color: #1a4d6b;
+      border-bottom-color: #1a4d6b;
+    }
+
+    /* AdSense container styling - ready for Google Ads */
+    .adsense-container {
+      max-width: 1280px;
+      margin: 1rem auto 0.5rem;
+      padding: 0 1.5rem;
+      text-align: center;
+      min-height: 90px;
+      background-color: transparent;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .adsense-container ins {
+      display: block;
+      margin: 0 auto;
+    }
+
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(4px);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      visibility: hidden;
+      opacity: 0;
+      transition: visibility 0.2s, opacity 0.2s;
+    }
+
+    .modal-overlay.active {
+      visibility: visible;
+      opacity: 1;
+    }
+
+    .modal-content {
+      background: #ffffff;
+      max-width: 550px;
+      width: 90%;
+      border-radius: 1.5rem;
+      box-shadow: 0 25px 40px rgba(0, 0, 0, 0.15);
+      padding: 1.8rem;
+      max-height: 80vh;
+      overflow-y: auto;
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.2rem;
+      border-bottom: 1px solid #eef2f6;
+      padding-bottom: 0.75rem;
+    }
+
+    .modal-header h3 {
+      font-weight: 600;
+      color: #1f3b4c;
+    }
+
+    .close-modal {
+      background: none;
+      border: none;
+      font-size: 1.4rem;
+      cursor: pointer;
+      color: #7f8fa4;
+    }
+
+    .container {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem 3rem;
+    }
+
+    .hero {
+      text-align: center;
+      margin-bottom: 2.2rem;
+    }
+
+    .hero h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #1a3a4f;
+      letter-spacing: -0.02em;
+    }
+
+    .hero p {
+      color: #5b6f88;
+      margin-top: 0.5rem;
+      font-size: 1rem;
+    }
+
+    .card {
+      background: #ffffff;
+      border-radius: 1.5rem;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.02), 0 0 0 1px rgba(0, 0, 0, 0.02);
+      padding: 1.6rem;
+      transition: box-shadow 0.2s;
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      margin-bottom: 1.25rem;
+      border-bottom: 1px solid #edf2f7;
+      padding-bottom: 0.7rem;
+    }
+
+    .card-header h2 {
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: #1f4870;
+    }
+
+    .sleep-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .input-item {
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+    }
+
+    .input-item label {
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: #5c6f87;
+    }
+
+    .input-item input {
+      background: #f9fbfd;
+      border: 1px solid #e2e8f0;
+      border-radius: 1rem;
+      padding: 0.7rem 0.4rem;
+      font-size: 0.95rem;
+      font-weight: 500;
+      text-align: center;
+      font-family: 'Inter', monospace;
+      transition: 0.2s;
+    }
+
+    .input-item input:focus {
+      outline: none;
+      border-color: #2c6e8f;
+      box-shadow: 0 0 0 3px rgba(44, 110, 143, 0.1);
+    }
+
+    .goal-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 1rem;
+      margin: 1rem 0 0.5rem;
+    }
+
+    .goal-field {
+      flex: 2;
+      min-width: 170px;
+    }
+
+    .goal-field label {
+      font-weight: 600;
+      font-size: 0.8rem;
+      display: block;
+      margin-bottom: 0.3rem;
+      color: #2c3e50;
+    }
+
+    .goal-field input {
+      background: #f9fbfd;
+      border: 1px solid #e2e8f0;
+      border-radius: 1rem;
+      padding: 0.6rem 1rem;
+      width: 100%;
+      font-weight: 500;
+    }
+
+    .btn-calculate {
+      background: #1f4870;
+      border: none;
+      color: white;
+      font-weight: 600;
+      padding: 0.7rem 1.8rem;
+      border-radius: 2rem;
+      cursor: pointer;
+      font-size: 0.85rem;
+      transition: all 0.2s;
+      font-family: inherit;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    }
+
+    .btn-calculate:hover {
+      background: #0f3557;
+      transform: translateY(-1px);
+    }
+
+    .results-area {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      margin: 1rem 0 1.8rem;
+    }
+
+    .stats-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      justify-content: space-between;
+    }
+
+    .stat-card {
+      background: #f9fbfe;
+      border-radius: 1.2rem;
+      padding: 1rem 1.2rem;
+      flex: 1;
+      min-width: 140px;
+      border: 1px solid #eef2f8;
+    }
+
+    .stat-label {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      color: #6c7f96;
+      letter-spacing: 0.3px;
+    }
+
+    .stat-value {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #1f4870;
+      line-height: 1.2;
+    }
+
+    .fatigue-tag {
+      display: inline-block;
+      background: #eef2fa;
+      padding: 0.2rem 0.7rem;
+      border-radius: 30px;
+      font-weight: 600;
+      font-size: 0.7rem;
+      margin-top: 0.3rem;
+    }
+
+    .progress-meter {
+      margin: 1.2rem 0;
+    }
+
+    .progress-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.75rem;
+      margin-bottom: 0.3rem;
+    }
+
+    .progress-bar-bg {
+      background: #e2e8f0;
+      border-radius: 30px;
+      height: 8px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      background: linear-gradient(90deg, #c2410c, #9b2c1d);
+      width: 0%;
+      height: 100%;
+      border-radius: 30px;
+      transition: width 0.5s ease;
+    }
+
+    .explanation-box {
+      background: #f1f6fd;
+      border-radius: 1rem;
+      padding: 1rem;
+      margin: 1rem 0;
+      font-size: 0.85rem;
+    }
+
+    .recovery-plan {
+      background: linear-gradient(135deg, #eaf7ed 0%, #e0f0e5 100%);
+      border-radius: 1rem;
+      padding: 1.2rem;
+      margin: 1rem 0;
+      border-left: 4px solid #2c6e4f;
+    }
+
+    .recovery-plan h4 {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #1e5631;
+      margin-bottom: 0.75rem;
+    }
+
+    .recovery-steps {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .recovery-steps li {
+      padding: 0.5rem 0;
+      border-bottom: 1px solid #cde2d3;
+      display: flex;
+      gap: 0.6rem;
+      align-items: flex-start;
+      font-size: 0.85rem;
+    }
+
+    .recovery-steps li:last-child {
+      border-bottom: none;
+    }
+
+    .step-marker {
+      font-weight: 700;
+      color: #2c6e4f;
+      min-width: 28px;
+    }
+
+    .info-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      margin-top: 0.6rem;
+    }
+
+    .info-chip {
+      background: white;
+      border-radius: 30px;
+      padding: 0.3rem 1rem;
+      font-size: 0.75rem;
+      font-weight: 500;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+      border: 1px solid #e9edf2;
+    }
+
+    .recommend {
+      background: #eef5ea;
+      border-left: 3px solid #2c6e4f;
+      padding: 0.8rem 1rem;
+      border-radius: 0.8rem;
+      font-size: 0.85rem;
+      font-weight: 500;
+    }
+
+    hr {
+      margin: 1rem 0;
+      border: none;
+      height: 1px;
+      background: #eef2f6;
+    }
+
+    .disclaimer {
+      font-size: 0.7rem;
+      color: #7d8eaa;
+      text-align: center;
+      margin-top: 1.5rem;
+    }
+
+    footer {
+      margin-top: 2rem;
+      text-align: center;
+      border-top: 1px solid #e9edf2;
+      padding-top: 1.8rem;
+    }
+
+    @media (max-width: 680px) {
+      .sleep-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .stat-value {
+        font-size: 1.6rem;
+      }
+      .nav-container {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .nav-links {
+        flex-wrap: wrap;
+        gap: 1rem;
+      }
+      .container {
+        padding: 1.5rem 1rem;
+      }
+      .adsense-container {
+        padding: 0 1rem;
+      }
+    }
+
+    .fade-in {
+      animation: fadeSlideUp 0.35s ease-out;
+    }
+
+    @keyframes fadeSlideUp {
+      from {
+        opacity: 0;
+        transform: translateY(8px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="top-nav">
+  <div class="nav-container">
+    <div class="logo">SleepBalance | Recovery Plan</div>
+    <div class="nav-links">
+      <button class="nav-btn" data-modal="privacy">Privacy</button>
+      <button class="nav-btn" data-modal="about">About</button>
+      <button class="nav-btn" data-modal="contact">Contact</button>
+      <button class="nav-btn" data-modal="terms">Terms</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================= -->
+<!-- GOOGLE ADSENSE READY SPOT - Insert your AdSense code here -->
+<!-- ============================================= -->
+<div class="adsense-container" id="adsense-container">
+  <!-- Example AdSense placeholder: replace with your own <ins> or script tag -->
+  <!-- 
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX"
+     crossorigin="anonymous"></script>
+    <ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+     data-ad-slot="1234567890"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+    <script>
+         (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
+  -->
+</div>
+<!-- ============================================= -->
+
+<div id="modalOverlay" class="modal-overlay">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3 id="modalTitle">Privacy Policy</h3>
+      <button class="close-modal" id="closeModalBtn">&times;</button>
+    </div>
+    <div class="modal-body" id="modalBody"></div>
+  </div>
+</div>
+
+<main class="container">
+  <div class="hero">
+    <h1>Sleep Debt Calculator</h1>
+    <p>Track your weekly rest · Get a personalized recovery plan · Optimize your sleep health</p>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <span style="font-weight:500;">📋</span>
+      <h2>Weekly Sleep Log</h2>
+    </div>
+    <div class="sleep-grid" id="sleepInputsGrid"></div>
+    <div class="goal-row">
+      <div class="goal-field">
+        <label>Preferred sleep goal (hours per night)</label>
+        <input type="number" id="sleepGoalInput" step="0.5" value="8.0" min="4" max="12">
+      </div>
+      <button class="btn-calculate" id="calculateBtn">Calculate Debt & Recovery Plan</button>
+    </div>
+  </div>
+
+  <div id="resultsContainer" class="results-area"></div>
+
+  <div class="card">
+    <div class="card-header">
+      <span style="font-weight:500;">🧠</span>
+      <h2>What is sleep debt?</h2>
+    </div>
+    <p>Sleep debt is the cumulative difference between your biological sleep need and actual sleep. Over consecutive nights, deficits impair cognitive function, immune response, and emotional regulation. Even small nightly shortfalls add up quickly.</p>
+    <div class="explanation-box" style="margin-top: 0.8rem;">
+      <strong>Clinical insight:</strong> One week of 6-hour nights creates a reaction-time delay comparable to a 0.05% blood alcohol concentration.
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <span style="font-weight:500;">⚡</span>
+      <h2>How to recover from sleep debt fast</h2>
+    </div>
+    <div class="info-grid">
+      <span class="info-chip">Extend sleep 1-2 extra hours nightly</span>
+      <span class="info-chip">20-minute power naps before 3 PM</span>
+      <span class="info-chip">Morning sunlight for circadian reset</span>
+      <span class="info-chip">No caffeine after 2 PM</span>
+      <span class="info-chip">Consistent bedtime even on weekends</span>
+    </div>
+    <p style="margin-top: 0.8rem; font-size: 0.9rem;">Research indicates each hour of debt may require 1.5 hours of extra rest. Your personalized plan below adapts to your specific deficit level.</p>
+  </div>
+
+  <footer>
+    <div class="disclaimer">© SleepBalance — evidence-informed sleep tracking. This is an estimate, not medical advice.</div>
+  </footer>
+</main>
+
+<script>
+  const sleepGoalInput = document.getElementById('sleepGoalInput');
+  const calculateBtn = document.getElementById('calculateBtn');
+  const resultsContainer = document.getElementById('resultsContainer');
+  const sleepInputsGrid = document.getElementById('sleepInputsGrid');
+  
+  const modalOverlay = document.getElementById('modalOverlay');
+  const modalTitle = document.getElementById('modalTitle');
+  const modalBody = document.getElementById('modalBody');
+  const closeModalBtn = document.getElementById('closeModalBtn');
+  
+  const dayLabels = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+  let sleepInputs = [];
+
+  function buildSleepInputs() {
+    sleepInputsGrid.innerHTML = '';
+    sleepInputs = [];
+    const defaultValues = [7.5, 6.0, 7.0, 5.5, 8.0, 9.0, 7.0];
+    for (let i = 0; i < 7; i++) {
+      const div = document.createElement('div');
+      div.className = 'input-item';
+      const label = document.createElement('label');
+      label.textContent = dayLabels[i];
+      const input = document.createElement('input');
+      input.type = 'number';
+      input.step = '0.5';
+      input.value = defaultValues[i].toFixed(1);
+      input.placeholder = 'hrs';
+      input.min = '0';
+      input.max = '24';
+      div.appendChild(label);
+      div.appendChild(input);
+      sleepInputsGrid.appendChild(div);
+      sleepInputs.push(input);
+    }
+  }
+
+  function getTotalSlept() {
+    let total = 0;
+    for (let inp of sleepInputs) {
+      let val = parseFloat(inp.value);
+      if (isNaN(val) || val < 0) val = 0;
+      total += val;
+    }
+    return total;
+  }
+
+  function computeSleepScore(totalSlept, goalPerNight) {
+    const targetTotal = goalPerNight * 7;
+    if (targetTotal <= 0) return 0;
+    let ratio = totalSlept / targetTotal;
+    if (ratio >= 1) return 100;
+    let score = Math.floor(ratio * 100);
+    return Math.min(100, Math.max(0, score));
+  }
+
+  function getFatigueLevel(debtHours) {
+    if (debtHours <= 2) return { level: 'Normal', color: '#2c6e4f', effects: 'Maintained focus, stable mood, efficient reaction time.' };
+    if (debtHours <= 5) return { level: 'Mild fatigue', color: '#c17f2e', effects: 'Reduced concentration, minor irritability, slower reflexes.' };
+    if (debtHours <= 10) return { level: 'Sleep deprived', color: '#bc5a2c', effects: 'Brain fog, low motivation, higher error rates, mood swings.' };
+    return { level: 'Severe sleep debt', color: '#a13e2d', effects: 'Risk of microsleeps, impaired judgment, weakened immunity.' };
+  }
+
+  function recoveryDaysNeeded(debtHours) {
+    if (debtHours <= 0) return 0;
+    const avgExtraRecoveryPerNight = 1.4;
+    let days = Math.ceil(debtHours / avgExtraRecoveryPerNight);
+    return Math.min(12, days);
+  }
+
+  function getIdealBedtime(avgSleptPerNight, goalPerNight) {
+    const wakeHour = 7.25;
+    let needed = goalPerNight;
+    let currentAvg = avgSleptPerNight;
+    let shortfall = needed - currentAvg;
+    if (shortfall <= 0) {
+      let stableBed = wakeHour - needed;
+      if (stableBed < 20) stableBed = 22.5;
+      return `Maintain consistent bedtime around ${formatTime(stableBed)} to preserve circadian alignment.`;
+    }
+    let extraRest = Math.min(1.5, shortfall);
+    let recommendedBed = wakeHour - (needed + extraRest * 0.4);
+    if (recommendedBed < 20) recommendedBed = 22.0;
+    return `To recover, aim for bedtime at ${formatTime(recommendedBed)}. Increase sleep duration gradually.`;
+  }
+
+  function formatTime(decimalHour) {
+    let hour24 = Math.floor(decimalHour);
+    let minutes = Math.round((decimalHour - hour24) * 60);
+    if (hour24 >= 24) hour24 -= 24;
+    if (hour24 < 0) hour24 += 24;
+    let period = hour24 >= 12 ? 'PM' : 'AM';
+    let hour12 = hour24 % 12;
+    if (hour12 === 0) hour12 = 12;
+    return `${hour12}:${minutes.toString().padStart(2, '0')} ${period}`;
+  }
+
+  // Generate personalized recovery plan based on debt level, score, and recovery days
+  function generateRecoveryPlan(debtHours, sleepScore, recoveryDays, fatigueLevel) {
+    if (debtHours <= 0.5) {
+      return {
+        title: "Maintenance Mode - Keep Up the Good Habit",
+        steps: [
+          "Continue with your current sleep schedule - you're meeting your goal.",
+          "Maintain a consistent bedtime and wake time, even on weekends.",
+          "Get 15-30 minutes of morning sunlight to reinforce your circadian rhythm."
+        ]
+      };
+    }
+    
+    const steps = [];
+    if (debtHours <= 3) {
+      steps.push("Add 30-60 minutes of extra sleep each night for the next 3 days.");
+      steps.push("Take a 20-minute power nap between 1-3 PM if feeling drowsy.");
+      steps.push("Avoid caffeine after 2 PM to improve sleep depth.");
+    } else if (debtHours <= 7) {
+      steps.push(`Extend your nightly sleep by 1-1.5 hours for the next ${Math.min(5, recoveryDays)} days.`);
+      steps.push("Schedule a 20-30 minute nap before 2 PM on weekends.");
+      steps.push("Dim lights and avoid screens 90 minutes before your new bedtime.");
+      steps.push("Increase hydration and reduce alcohol intake, which fragments sleep.");
+    } else {
+      steps.push(`Prioritize 8-9 hours in bed for the next ${recoveryDays} days. Consider going to bed 2 hours earlier.`);
+      steps.push("Take a \"recovery weekend\" with 10 hours of time in bed per night.");
+      steps.push("Avoid driving long distances or critical tasks until debt is reduced.");
+      steps.push("Use relaxation techniques: box breathing or body scan meditation before bed.");
+      steps.push("Consult a healthcare provider if fatigue persists after 2 weeks of recovery.");
+    }
+    
+    // Add universal tips based on score
+    if (sleepScore < 60) {
+      steps.push("Track your sleep consistency - aim for same wake time daily.");
+    }
+    
+    if (fatigueLevel === 'Sleep deprived' || fatigueLevel === 'Severe sleep debt') {
+      steps.push("Reduce intense exercise temporarily; focus on walking and stretching.");
+    }
+    
+    return {
+      title: `Your ${recoveryDays > 0 ? recoveryDays + '-Day' : 'Maintenance'} Recovery Plan`,
+      steps: steps.slice(0, 6)
+    };
+  }
+
+  function calculateAndRender() {
+    const goal = parseFloat(sleepGoalInput.value);
+    if (isNaN(goal) || goal <= 0) {
+      alert('Please enter a valid sleep goal (e.g., 7.5 or 8)');
+      return;
+    }
+    let totalSlept = getTotalSlept();
+    const targetTotal = goal * 7;
+    let debtHours = targetTotal - totalSlept;
+    debtHours = Math.max(0, debtHours);
+    const sleepScore = computeSleepScore(totalSlept, goal);
+    const avgSlept = totalSlept / 7;
+    const fatigueObj = getFatigueLevel(debtHours);
+    const recoveryDaysVal = recoveryDaysNeeded(debtHours);
+    const idealBedMsg = getIdealBedtime(avgSlept, goal);
+    let debtPercent = Math.min(100, (debtHours / 20) * 100);
+    
+    const recoveryPlan = generateRecoveryPlan(debtHours, sleepScore, recoveryDaysVal, fatigueObj.level);
+    
+    const recoveryStepsHtml = recoveryPlan.steps.map((step, idx) => `
+      <li>
+        <span class="step-marker">${idx + 1}.</span>
+        <span>${step}</span>
+      </li>
+    `).join('');
+    
+    const resultHtml = `
+      <div class="card fade-in" id="dynamicResult">
+        <div class="card-header">
+          <span style="font-weight:500;">📊</span>
+          <h2>Sleep Analysis & Recovery Prescription</h2>
+        </div>
+        <div class="stats-row">
+          <div class="stat-card"><div class="stat-label">Total Sleep Debt</div><div class="stat-value">${debtHours.toFixed(1)} hrs</div><div class="fatigue-tag" style="background: ${fatigueObj.color}15; color:${fatigueObj.color};">${fatigueObj.level}</div></div>
+          <div class="stat-card"><div class="stat-label">Sleep Score</div><div class="stat-value">${sleepScore}<span style="font-size:0.9rem;">/100</span></div></div>
+          <div class="stat-card"><div class="stat-label">Weekly Total</div><div class="stat-value">${totalSlept.toFixed(1)} hrs</div><div>target: ${targetTotal.toFixed(1)} hrs</div></div>
+        </div>
+        <div class="progress-meter">
+          <div class="progress-label"><span>Debt severity meter</span><span>${debtHours.toFixed(1)} hrs deficit</span></div>
+          <div class="progress-bar-bg"><div class="progress-fill" style="width: ${debtPercent}%;"></div></div>
+        </div>
+        <div class="explanation-box">
+          <strong>Fatigue & performance effects:</strong> ${fatigueObj.effects}<br>
+          <strong>Recovery projection:</strong> ${recoveryDaysVal === 0 ? 'No significant debt — optimal rest.' : `Approximately ${recoveryDaysVal} day${recoveryDaysVal !== 1 ? 's' : ''} of sleeping 8–9 hours per night to resolve debt.`}
+        </div>
+        
+        <div class="recovery-plan">
+          <h4>🌿 ${recoveryPlan.title}</h4>
+          <ul class="recovery-steps">
+            ${recoveryStepsHtml}
+          </ul>
+        </div>
+        
+        <div class="recommend">
+          ${idealBedMsg}
+        </div>
+        <hr>
+        <div style="display: flex; justify-content: space-between; font-size:0.8rem;">
+          <span>Average sleep: ${avgSlept.toFixed(1)} hrs/night</span>
+          <span>Goal: ${goal} hrs/night</span>
+        </div>
+        <div class="disclaimer" style="margin-top: 1rem;">This personalized plan is based on sleep science guidelines. Individual results may vary. Consistent habits yield best outcomes.</div>
+      </div>
+    `;
+    const existingDynamic = document.getElementById('dynamicResult');
+    if (existingDynamic) existingDynamic.remove();
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = resultHtml;
+    const newCard = tempDiv.firstElementChild;
+    resultsContainer.insertBefore(newCard, resultsContainer.firstChild);
+    newCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
+  const modalData = {
+    privacy: { title: "Privacy Policy", content: "<p>We respect your privacy. Sleep Debt Calculator does not store, transmit, or share any personal data. All calculations happen locally in your browser. No cookies, no tracking, and no data logging. Your sleep entries remain private and are never sent to any server.</p>" },
+    about: { title: "About This Tool", content: "<p>SleepBalance is dedicated to evidence-based sleep education. This calculator uses standard sleep debt formulas (total need minus actual sleep) and provides fatigue level mapping derived from sleep research literature. Version 3.0 — now includes personalized recovery plans based on debt severity.</p>" },
+    contact: { title: "Contact", content: "<p>For general inquiries or feedback about the Sleep Debt Calculator, please reach out to support@sleepbalance.example.com. We value suggestions to improve accuracy and user experience.</p>" },
+    terms: { title: "Terms of Use", content: "<p>By using this calculator, you acknowledge that results are estimates and not medical advice. SleepBalance is not liable for decisions based on output. Always consult a qualified healthcare provider for sleep disorders or chronic fatigue. This tool is intended for informational and educational use only.</p>" }
+  };
+
+  function openModal(modalId) {
+    const data = modalData[modalId];
+    if (data) {
+      modalTitle.innerText = data.title;
+      modalBody.innerHTML = data.content;
+      modalOverlay.classList.add('active');
+    }
+  }
+
+  function closeModal() {
+    modalOverlay.classList.remove('active');
+  }
+
+  document.querySelectorAll('.nav-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      const modalKey = btn.getAttribute('data-modal');
+      if (modalKey && modalData[modalKey]) openModal(modalKey);
+    });
+  });
+  closeModalBtn.addEventListener('click', closeModal);
+  modalOverlay.addEventListener('click', (e) => {
+    if (e.target === modalOverlay) closeModal();
+  });
+
+  function init() {
+    buildSleepInputs();
+    setTimeout(() => { calculateAndRender(); }, 60);
+  }
+  calculateBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    calculateAndRender();
+  });
+  document.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter' && (e.target.tagName === 'INPUT' || e.target.tagName === 'BUTTON')) {
+      e.preventDefault();
+      calculateAndRender();
+    }
+  });
+  init();
+</script>
+</body>
+</html>
